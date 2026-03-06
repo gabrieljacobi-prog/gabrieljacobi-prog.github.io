@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gabriel Jacobi — Designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,300&display=swap" rel="stylesheet">
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #1A1B1D;
+      --surface:   #222326;
+      --surface2:  #2a2b2f;
+      --border:    rgba(255,255,255,0.08);
+      --orange:    #F06030; /* lifted from #E8551A → ~4.8:1 on --bg, passes AA large/bold */
+      --orange-dim: rgba(240,96,48,0.14);
+      --text:      #e4e4e8; /* ~13:1 on --bg ✓ */
+      --muted:     #a0a0b0; /* lifted from #7a7a8a → ~6.0:1 on --bg, ~5.5:1 on --surface ✓ */
+      --white:     #ffffff;
+      --radius:    10px;
+      --transition: 0.35s ease;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 24px;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── TYPOGRAPHY ───────────────────────────────────────── */
+    h1, h2, h3, h4 { font-family: 'Spectral', Georgia, serif; line-height: 1.15; }
+    .section-label {
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      font-weight: 700; color: var(--white); margin-bottom: 1.2rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 5vw;
+      background: rgba(13,13,16,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 1.05rem; font-weight: 600; letter-spacing: 0.04em; color: var(--white);
+    }
+    .nav-logo span { color: var(--orange); }
+    .nav-links {
+      display: flex; gap: 2.2rem; list-style: none;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.03em;
+    }
+    .nav-links a { color: var(--muted); transition: color var(--transition); }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.05em;
+      padding: 0.55rem 1.3rem;
+      border: 1.5px solid var(--orange); border-radius: 100px; color: var(--orange);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-cta:hover { background: var(--orange); color: var(--bg); }
+
+    /* ─── HERO v4 — Single featured ──────────────────────── */
+    @keyframes kenBurns {
+      0%   { transform: scale(1.0) translate(0%, 0%); }
+      50%  { transform: scale(1.08) translate(-1.5%, -1%); }
+      100% { transform: scale(1.0) translate(0%, 0%); }
+    }
+    #hero {
+      position: relative; width: 100%; height: 100vh;
+      min-height: 560px; overflow: hidden;
+      display: flex; align-items: flex-end;
+    }
+    .hero-bg-img {
+      position: absolute; inset: 0; z-index: 0;
+    }
+    .hero-bg-img img,
+    .hero-bg-img video {
+      width: 100%; height: 100%; object-fit: cover; object-position: center 40%;
+      display: block;
+    }
+    .hero-bg-img img {
+      animation: kenBurns 18s ease-in-out infinite;
+      transform-origin: center center;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        linear-gradient(to top, rgba(14,14,17,0.97) 0%, rgba(14,14,17,0.6) 35%, rgba(14,14,17,0.1) 70%, transparent 100%),
+        linear-gradient(to right, rgba(14,14,17,0.65) 0%, rgba(14,14,17,0.2) 45%, transparent 70%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      width: 100%; padding: 0 5vw 4rem;
+      max-width: 1340px; margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 1rem;
+      opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+    }
+    .hero-name {
+      font-family: 'Spectral', Georgia, serif;
+      font-size: clamp(3.4rem, 8vw, 7rem); font-weight: 700; color: var(--white);
+      line-height: 1.0; letter-spacing: -0.02em;
+      opacity: 0; animation: fadeUp 0.9s 0.45s forwards;
+    }
+    .hero-name em { font-style: normal; color: var(--orange); }
+    .hero-role {
+      margin-top: 1.2rem;
+      font-size: clamp(0.95rem, 1.8vw, 1.1rem); font-weight: 300;
+      color: rgba(228,228,232,0.75); max-width: 480px; line-height: 1.7;
+      opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+    }
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.6rem;
+      opacity: 0; animation: fadeUp 0.9s 0.75s forwards;
+    }
+    .btn-primary {
+      font-size: 0.87rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 0.85rem 2rem; background: var(--orange); color: var(--white);
+      border-radius: 100px; transition: opacity var(--transition), transform var(--transition);
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+    .btn-secondary {
+      font-size: 0.87rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 0.85rem 2rem; border: 1.5px solid rgba(255,255,255,0.22);
+      border-radius: 100px; color: var(--text);
+      transition: border-color var(--transition), color var(--transition), transform var(--transition);
+    }
+    .btn-secondary:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }
+    .hero-featured-label {
+      position: absolute; bottom: 4rem; right: 5vw; z-index: 2;
+      text-align: right;
+      opacity: 0; animation: fadeUp 1s 1s forwards;
+    }
+    .hero-featured-tag {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--orange); display: block; margin-bottom: 0.3rem;
+    }
+    .hero-featured-title {
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 1.1rem; font-weight: 600; color: rgba(255,255,255,0.6);
+    }
+    .hero-scroll {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); z-index: 2;
+      opacity: 0; animation: fadeUp 1s 1.2s forwards;
+    }
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.35), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+        /* ─── SECTIONS ─────────────────────────────────────────── */
+    section { padding: 6rem 5vw; }
+    .container { max-width: 1240px; margin: 0 auto; }
+    .divider { width: 48px; height: 2px; background: var(--orange); margin-bottom: 2.5rem; }
+
+    /* ─── ABOUT ────────────────────────────────────────────── */
+    #about { background: var(--surface); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 1.15rem; }
+    .about-text p em { color: var(--orange); font-weight: 600; font-style: normal; }
+    .info-block { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .info-row { display: flex; gap: 1rem; font-size: 0.97rem; }
+    .info-label { color: var(--orange); min-width: 80px; font-weight: 700; }
+    .info-value { color: var(--muted); }
+    .info-value a:hover { color: var(--orange); }
+    .skills-group { margin-bottom: 2rem; }
+    .skills-group h4 {
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.9rem;
+    }
+    .skills-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+      font-size: 0.88rem; font-weight: 500;
+      padding: 0.35rem 0.9rem; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 100px; color: var(--text);
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .tag:hover { border-color: var(--orange); color: var(--orange); }
+
+    /* ─── EXPERIENCE ───────────────────────────────────────── */
+    #experience { background: var(--surface); }
+    .timeline { display: flex; flex-direction: column; }
+    .timeline-item {
+      display: grid; grid-template-columns: 160px 1fr; gap: 2.5rem;
+      padding: 2.5rem 0; border-bottom: 1px solid var(--border);
+    }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-date { font-size: 0.95rem; color: var(--muted); padding-top: 0.2rem; }
+    .timeline-content h3 { font-size: 1.22rem; font-weight: 600; color: var(--white); margin-bottom: 0.25rem; }
+    .timeline-company { font-size: 0.97rem; color: var(--orange); margin-bottom: 0.8rem; font-weight: 600; }
+    .timeline-desc { font-size: 1.05rem; color: var(--muted); }
+
+    /* ─── PROJECTS ─────────────────────────────────────────── */
+    #projects { background: var(--bg); }
+    .projects-intro { max-width: 600px; color: var(--muted); margin-bottom: 3.5rem; font-size: 1.12rem; }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; cursor: pointer;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .project-card:hover {
+      border-color: rgba(232,85,26,0.35);
+      transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .project-img {
+      width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: center;
+      transition: transform 0.5s ease;
+    }
+    .project-card:hover .project-img { transform: scale(1.04); }
+    .img-wrap { overflow: hidden; }
+    .project-body { padding: 1.4rem 1.6rem 1.8rem; }
+    .project-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+    .project-tag {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.2rem 0.65rem; background: var(--orange-dim); color: var(--orange); border-radius: 4px;
+    }
+    .project-title { font-size: 1.18rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+    .project-desc { font-size: 0.97rem; color: var(--muted); line-height: 1.65; }
+    .project-arrow {
+      display: inline-block; margin-top: 1rem;
+      font-size: 0.88rem; font-weight: 700; letter-spacing: 0.04em;
+      color: var(--orange); opacity: 0; transform: translateX(-8px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .project-card:hover .project-arrow { opacity: 1; transform: translateX(0); }
+
+    /* ─── MODAL ────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(5,5,8,0.92); backdrop-filter: blur(6px);
+      display: flex; align-items: flex-start; justify-content: center; padding: 2rem;
+      overflow-y: auto;
+      opacity: 0; pointer-events: none; transition: opacity var(--transition);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 14px;
+      max-width: 1100px; width: 100%; margin: auto;
+      transform: translateY(20px); transition: transform var(--transition);
+      overflow: hidden; position: relative;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 14px 14px 0 0; }
+    .modal-full-img { width: 100%; height: auto; border-radius: 8px; margin: 1.8rem 0; display: block; }
+    .modal-body { padding: 3rem; }
+    .modal-body > .modal-tags,
+    .modal-body > .modal-title,
+    .modal-body > .modal-subtitle,
+    .modal-body > .modal-text,
+    .modal-body > .modal-credits,
+    .modal-body > .modal-video-section { max-width: 740px; margin-left: auto; margin-right: auto; }
+    .modal-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .modal-title { font-size: 2.4rem; font-weight: 700; color: var(--white); margin-bottom: 0.3rem; }
+    .modal-subtitle { font-size: 1rem; font-weight: 600; color: var(--orange); margin-bottom: 1.8rem; }
+
+    /* Intro paragraph — larger, lighter */
+    .modal-intro {
+      font-size: 1.35rem; line-height: 1.75; color: var(--text);
+      margin-bottom: 2rem; font-weight: 300;
+    }
+
+    /* Body text */
+    .modal-text { font-size: 1.1rem; color: var(--muted); line-height: 1.85; }
+    .modal-text p { margin-bottom: 1.1rem; }
+
+    /* Bold in accent color */
+    .modal-text em, .modal-intro em { color: var(--orange); font-weight: 600; font-style: normal; }
+
+    /* Section headers */
+    .modal-text h3 {
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 1.45rem; font-weight: 600; color: var(--white);
+      margin: 2.2rem 0 0.8rem; letter-spacing: -0.01em;
+    }
+
+    /* Styled lists */
+    .modal-text ul, .modal-text ol {
+      padding-left: 0; margin: 0.8rem 0 1.2rem;
+      display: flex; flex-direction: column; gap: 0.55rem;
+      list-style: none;
+    }
+    .modal-text ul li, .modal-text ol li {
+      position: relative; padding-left: 1.4rem; color: var(--muted);
+    }
+    .modal-text ul li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--orange); font-weight: 700;
+    }
+    .modal-text ol { counter-reset: modal-counter; }
+    .modal-text ol li { counter-increment: modal-counter; padding-left: 2rem; }
+    .modal-text ol li::before {
+      content: counter(modal-counter); position: absolute; left: 0;
+      color: var(--orange); font-weight: 700; font-size: 0.95rem;
+      background: var(--orange-dim); width: 1.4rem; height: 1.4rem;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      top: 0.15rem; font-family: 'Nunito Sans', sans-serif;
+    }
+
+    .modal-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+    .modal-gallery img { border-radius: 8px; width: 100%; height: auto; object-fit: contain; background: transparent; }
+
+    .modal-credits { font-size: 0.85rem; color: var(--muted); margin-top: 2.5rem; line-height: 1.8; border-top: 1px solid var(--border); padding-top: 1.2rem; }
+
+    .modal-video-section { margin-top: 2rem; }
+    .modal-video-label {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.8rem;
+    }
+    .modal-video-grid { display: flex; flex-direction: column; gap: 1rem; }
+    .video-wrap {
+      position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden;
+      background: #000;
+    }
+    .video-wrap iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border: none;
+    }
+    .modal-close { display: none; }
+    .modal-close-fixed {
+      display: none;
+      position: fixed; top: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px; background: rgba(26,27,29,0.85);
+      border: 1.5px solid var(--border);
+      border-radius: 50%; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--white); font-size: 1.1rem; z-index: 300; line-height: 1;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+    }
+    .modal-close-fixed.visible { display: flex; }
+    .modal-close-fixed:hover { background: var(--orange); color: var(--white); border-color: var(--orange); }
+
+    /* ─── EDUCATION ────────────────────────────────────────── */
+    #education { background: var(--bg); }
+    .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 0.5rem; }
+    .edu-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 2rem; transition: border-color var(--transition);
+    }
+    .edu-card:hover { border-color: rgba(232,85,26,0.3); }
+    .edu-year {
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 0.7rem;
+    }
+    .edu-degree { font-size: 1.1rem; font-weight: 600; color: var(--white); margin-bottom: 0.4rem; }
+    .edu-school { font-size: 0.95rem; color: var(--muted); line-height: 1.55; }
+
+    /* ─── CONTACT ──────────────────────────────────────────── */
+    #contact { background: var(--surface); text-align: center; }
+    .contact-inner { max-width: 640px; margin: 0 auto; }
+    .contact-title {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; color: var(--white); margin-bottom: 1rem;
+    }
+    .contact-sub { font-size: 1.08rem; color: var(--muted); margin-bottom: 2.5rem; }
+    .contact-links { display: flex; justify-content: center; }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      font-size: 1rem; font-weight: 600; color: var(--text);
+      padding: 0.9rem 2rem; border: 1px solid var(--border); border-radius: 100px;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+    .contact-link svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--orange); }
+    .contact-link:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+
+    /* ─── FOOTER ───────────────────────────────────────────── */
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border);
+      padding: 1.8rem 5vw;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem; color: var(--muted);
+    }
+
+    /* ─── ANIMATIONS ───────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── HAMBURGER ────────────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column; justify-content: center; gap: 5px;
+      width: 36px; height: 36px; cursor: pointer;
+      background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed; inset: 0; top: 0; z-index: 99;
+      background: rgba(13,13,16,0.98);
+      backdrop-filter: blur(16px);
+      flex-direction: column; align-items: flex-start; justify-content: center;
+      gap: 0.4rem; padding: 0 10vw;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: all; }
+    .mobile-menu a {
+      font-family: 'Spectral', Georgia, serif;
+      font-size: clamp(1.8rem, 8vw, 2.5rem); font-weight: 600;
+      color: var(--muted); letter-spacing: -0.01em;
+      padding: 0.5rem 1rem;
+      transition: color 0.2s ease;
+    }
+    .mobile-menu a:hover { color: var(--white); }
+    .mobile-menu .mobile-menu-cta {
+      margin-top: 1.5rem;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 700; letter-spacing: 0.05em;
+      padding: 0.8rem 2rem;
+      border: 1.5px solid var(--orange); border-radius: 100px; color: var(--orange);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .mobile-menu .mobile-menu-cta:hover { background: var(--orange); color: var(--bg); }
+
+    /* ─── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-content { padding-bottom: 4rem; }
+      .carousel-meta { bottom: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .about-photo { aspect-ratio: 4/3; object-position: center 20%; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.4rem; }
+      .edu-grid { grid-template-columns: 1fr 1fr; }
+      .modal-gallery { grid-template-columns: 1fr; }
+    }
+
+    /* ─── BEYOND ───────────────────────────────────────────── */
+    #beyond { background: var(--surface); }
+    .beyond-inner {
+      display: flex; gap: 3.5rem; align-items: center;
+    }
+    .beyond-photo-wrap {
+      flex-shrink: 0;
+      width: 330px; height: 330px;
+      border-radius: 50%; overflow: hidden;
+      border: 3px solid var(--border);
+      box-shadow: 0 0 0 6px var(--orange-dim);
+    }
+    .beyond-photo {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+      filter: grayscale(15%);
+      transition: filter var(--transition), transform var(--transition);
+    }
+    .beyond-photo-wrap:hover .beyond-photo { filter: grayscale(0%); transform: scale(1.04); }
+    .beyond-text { flex: 1; }
+    .beyond-text p { color: var(--muted); font-size: 1.15rem; line-height: 1.85; }
+    .beyond-text em { color: var(--orange); font-style: normal; font-weight: 600; }
+    @media (max-width: 700px) {
+      .beyond-inner { flex-direction: column; gap: 2rem; align-items: flex-start; }
+      .beyond-photo-wrap { width: 200px; height: 200px; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .edu-grid { grid-template-columns: 1fr; }
+      .hero-name { font-size: clamp(2.8rem, 13vw, 4rem); }
+      .hero-ctas { justify-content: center; width: 100%; }
+      .hero-ctas .btn-primary,
+      .hero-ctas .btn-secondary { flex: 1; text-align: center; }
+      .hero-scroll { display: none; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .modal-body { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── FIXED MODAL CLOSE ──────────────────────────────── -->
+  <button class="modal-close-fixed" id="modalCloseFixed" aria-label="Close">✕</button>
+
+
+  <!-- ─── NAV ─────────────────────────────────────────────── -->
+  <nav>
+    <span class="nav-logo">Gabriel <span>Jacobi</span></span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Work</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+    </ul>
+    <a href="https://www.linkedin.com/in/gabrieljacobi/" target="_blank" rel="noopener noreferrer" class="nav-cta">Get in touch</a>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ─── MOBILE MENU ──────────────────────────────────────── -->
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Navigation menu">
+    <a href="#about" class="mobile-nav-link">About</a>
+    <a href="#projects" class="mobile-nav-link">Work</a>
+    <a href="#experience" class="mobile-nav-link">Experience</a>
+    <a href="#education" class="mobile-nav-link">Education</a>
+    <a href="#contact" class="mobile-nav-link">Contact</a>
+    <a href="https://www.linkedin.com/in/gabrieljacobi/" target="_blank" rel="noopener noreferrer" class="mobile-menu-cta">Get in touch</a>
+  </div>
+
+  <!-- ─── HERO v4 — Single featured ──────────────────────── -->
+  <section id="hero">
+    <div class="hero-bg-img">
+      <video autoplay muted loop playsinline>
+        <source src="media/hero-playtesting.webm" type="video/webm" />
+        <source src="media/hero-playtesting.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Designer — Malmö, Sweden</div>
+      <h1 class="hero-name">Gabriel<br><em>Jacobi</em></h1>
+      <p class="hero-role">10 years of experience in UX, brand, and visual design — across game studios, global corporations, and design consultancies.</p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn-primary">View My Work</a>
+        <a href="#about" class="btn-secondary">About Me</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+
+    <!-- ─── ABOUT ─────────────────────────────────────────────── -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <div class="section-label">Profile</div>
+          <h2 class="section-title">Curious. Detailed.<br>Adaptable.</h2>
+          <div class="divider"></div>
+          <p>I'm a designer based in <em>Malmö, Sweden</em>, with <em>10 years of experience</em> working in-house, as a consultant, and within design studios. I've collaborated with global companies on print and digital design solutions, along with 3D and motion graphics across a range of industries.</p>
+          <p>I'm driven by curiosity and attention to detail, and I'm always looking for opportunities to grow and learn new skills. This mindset keeps my creative approach fresh and adaptable to different clients and projects.</p>
+        </div>
+        <div class="reveal">
+          <div class="section-label">Skills &amp; Tools</div>
+          <div class="skills-group">
+            <h4>Design</h4>
+            <div class="skills-tags">
+              <span class="tag">UX Design</span>
+              <span class="tag">UI Design</span>
+              <span class="tag">Brand Design</span>
+              <span class="tag">Graphic Design</span>
+              <span class="tag">Art Direction</span>
+              <span class="tag">Motion Graphics</span>
+              <span class="tag">3D Design</span>
+              <span class="tag">Layout</span>
+            </div>
+          </div>
+          <div class="skills-group">
+            <h4>Adobe Suite</h4>
+            <div class="skills-tags">
+              <span class="tag">Photoshop</span>
+              <span class="tag">Illustrator</span>
+              <span class="tag">InDesign</span>
+              <span class="tag">Premiere</span>
+              <span class="tag">After Effects</span>
+            </div>
+          </div>
+          <div class="skills-group">
+            <h4>Tools</h4>
+            <div class="skills-tags">
+              <span class="tag">Figma</span>
+              <span class="tag">Blender</span>
+              <span class="tag">Substance Design</span>
+              <span class="tag">Substance Painter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="beyond-inner reveal" style="margin-top: 4rem; padding-top: 3.5rem; border-top: 1px solid var(--border);">
+        <div class="beyond-photo-wrap">
+          <img class="beyond-photo" src="media/GabrielJacobi_11.webp" alt="Gabriel Jacobi" />
+        </div>
+        <div class="beyond-text">
+          <div class="section-label">Beyond the Studio</div>
+          <p>Outside of work, I'm an avid reader — from literary fiction, the playful mischievousness of Latin American writing to comics and sci-fi. I love a good film or an adventure puzzle game, and I'm always mid-way through some sprawling RPG. I also enjoy long distance running: I can go for hours in a trail run with a good audiobook or podcast. But above all, I enjoy the company of my beautiful cats, <em>Hermes</em> and <em>Selene</em>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ─── PROJECTS ──────────────────────────────────────────── -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-label reveal">Selected Work</div>
+      <h2 class="section-title reveal">Projects</h2>
+      <div class="divider reveal"></div>
+      <p class="projects-intro reveal">A selection of projects spanning UX design, brand identity, game design, 3D, and editorial.</p>
+      <div class="projects-grid">
+
+        <div class="project-card reveal" onclick="openModal('modal-hollow')">
+          <div class="img-wrap"><img class="project-img" src="media/Hollow_Pact_Cover_Thumbnail.webp" alt="Hollow Pact" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">UX Design</span><span class="project-tag">Graphic Design</span><span class="project-tag">3D</span></div>
+            <div class="project-title">Hollow Pact</div>
+            <p class="project-desc">Visual identity, component design, and rulebook for a semi-cooperative horror board game — funded on Kickstarter in 16 minutes.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal" onclick="openModal('modal-playtest')">
+          <div class="img-wrap"><img class="project-img" src="media/playtesting_cover.webp" alt="Playtesting Platform" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">UI Design</span><span class="project-tag">UX Research</span><span class="project-tag">Dashboard</span></div>
+            <div class="project-title">Playtesting Platform</div>
+            <p class="project-desc">A purpose-built feedback platform for board game playtesters and game designers, replacing a rigid legacy tool with a flexible multi-role system.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal" onclick="openModal('modal-beast')">
+          <div class="img-wrap"><img class="project-img" src="media/beastRPG_cover.webp" alt="Beast RPG" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Art Direction</span><span class="project-tag">Layout</span><span class="project-tag">3D</span></div>
+            <div class="project-title">Beast: The Roleplaying Game</div>
+            <p class="project-desc">Art direction and layout for a D&D 5E compatible TTRPG — 100+ page preview guide, full visual language, and 3D marketing assets for a successful Kickstarter.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal" onclick="openModal('modal-guild')">
+          <div class="img-wrap"><img class="project-img" src="media/cg_cover.webp" alt="Creator's Guild" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">UX/UI Design</span><span class="project-tag">Web</span></div>
+            <div class="project-title">Creator's Guild</div>
+            <p class="project-desc">A community platform redesigned from scratch, letting players create custom Contracts, Beasts, and Hunters for the Beast board game — desktop and mobile.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal" onclick="openModal('modal-arjo-vte')">
+          <div class="img-wrap"><img class="project-img" src="media/vte_cover.webp" alt="Arjo VTE" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">UI Design</span><span class="project-tag">3D</span><span class="project-tag">Three.js</span><span class="project-tag">MedTech</span></div>
+            <div class="project-title">Arjo VTE Explorer</div>
+            <p class="project-desc">An interactive 3D product experience for Arjo's Flowtron blood-clot prevention system, designed for sales and medical personnel.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal" onclick="openModal('modal-arjo-cumulus')">
+          <div class="img-wrap"><img class="project-img" src="media/cumulus_cover.webp" alt="Arjo Cumulus" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">UI Design</span><span class="project-tag">Dashboard</span><span class="project-tag">Three.js</span><span class="project-tag">MedTech</span></div>
+            <div class="project-title">Arjo Cumulus Project</div>
+            <p class="project-desc">Ward monitoring dashboards for connected hospital beds, enabling real-time fall-prevention protocol oversight for nurses and administrators.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal" onclick="openModal('modal-superbolt')">
+          <div class="img-wrap"><img class="project-img" src="media/nxt_cover.webp" alt="Superbolt NXT" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Visual Design</span><span class="project-tag">3D</span><span class="project-tag">Brand</span></div>
+            <div class="project-title">Superbolt NXT</div>
+            <p class="project-desc">Product launch visual language for Nord-Lock's next-generation tensioner — 3D model built from scratch, plus animations, print materials, and a landing page for EMEA.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal" onclick="openModal('modal-bolted')">
+          <div class="img-wrap"><img class="project-img" src="media/bolted_cover_thumbnail.webp" alt="Bolted Magazine" loading="lazy" /></div>
+          <div class="project-body">
+            <div class="project-tags"><span class="project-tag">Art Direction</span><span class="project-tag">Editorial</span><span class="project-tag">Motion</span></div>
+            <div class="project-title">Bolted Magazine</div>
+            <p class="project-desc">Biannual publication by Nord-Lock Group on bolting technology — art directed across 10 languages, with technical illustrations produced in collaboration with the engineering team.</p>
+            <span class="project-arrow">View project →</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="container">
+      <div class="section-label reveal">Work Experience</div>
+      <h2 class="section-title reveal">Where I've worked</h2>
+      <div class="divider reveal"></div>
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2024 — Present</div>
+          <div class="timeline-content">
+            <h3>Lead UX Designer</h3>
+            <div class="timeline-company">Studio Midhall</div>
+            <p class="timeline-desc">Design and User Experience including game development, communication material, website and internal tools. Leading UX across digital and print product lines for an independent board game studio.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2022 — 2024</div>
+          <div class="timeline-content">
+            <h3>Digital Product Designer</h3>
+            <div class="timeline-company">Devoteam Creative Tech</div>
+            <p class="timeline-desc">UX/UI design in a cross-functional team and agile environment, delivering digital product solutions for a range of clients.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2016 — 2022</div>
+          <div class="timeline-content">
+            <h3>Brand Designer</h3>
+            <div class="timeline-company">Nord-Lock Group</div>
+            <p class="timeline-desc">In-house designer working with both print and digital materials, offering support for the entire Global Team. Created visual assets, publications, 3D animations, and brand communications across markets worldwide.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2014 — 2016</div>
+          <div class="timeline-content">
+            <h3>Brand Designer</h3>
+            <div class="timeline-company">commceptaDesign</div>
+            <p class="timeline-desc">Designed print materials for major clients including Volvo, Telefónica, and Editora Positivo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── EDUCATION ─────────────────────────────────────────── -->
+  <section id="education">
+    <div class="container">
+      <div class="section-label reveal">Education</div>
+      <h2 class="section-title reveal">Academic Background</h2>
+      <div class="divider reveal"></div>
+      <div class="edu-grid">
+        <div class="edu-card reveal">
+          <div class="edu-year">2016 — 2018</div>
+          <div class="edu-degree">Master of Interaction Design</div>
+          <div class="edu-school">Malmö University</div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-year">2011 — Exchange</div>
+          <div class="edu-degree">Exchange Program</div>
+          <div class="edu-school">Cape Peninsula University of Technology</div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-year">2008 — 2013</div>
+          <div class="edu-degree">Bachelor of Graphic Design</div>
+          <div class="edu-school">Universidade Federal do Paraná</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ───────────────────────────────────────────── -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="section-label">Get in touch</div>
+        <h2 class="contact-title">Let's work together</h2>
+        <p class="contact-sub">Based in Malmö, Sweden — open to projects and collaborations. Reach out on LinkedIn.</p>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/gabrieljacobi/" target="_blank" rel="noopener noreferrer" class="contact-link">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="color:var(--orange)"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Connect on LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
+  <footer>
+    <span>© 2025 Gabriel Jacobi. All rights reserved.</span>
+    <span>Malmö, Sweden</span>
+  </footer>
+
+  <!-- ═══ MODALS ════════════════════════════════════════════════ -->
+
+  <!-- Hollow Pact -->
+  <div class="modal-overlay" id="modal-hollow" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-hollow')">✕</div>
+      <img class="modal-img" src="media/Hollow_Pact_Cover_Thumbnail.webp" alt="Hollow Pact" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">UX Design</span><span class="project-tag">Graphic Design</span><span class="project-tag">3D</span></div>
+        <h2 class="modal-title">Hollow Pact</h2>
+        <div class="modal-subtitle">Studio Midhall</div>
+        <div class="modal-text">
+          <p class="modal-intro">Hollow Pact is the latest title from Studio Midhall. Launched on Kickstarter in 2025, it reached full funding in just 16 minutes. The game is semi-cooperative with a strong horror theme: one player controls a mysterious Beast, while the others take on the role of Scoundrels, navigating a dangerous city to deliver stolen cargo — before the Beast finds them.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/Hollow_Pact_Box.webp" alt="Hollow Pact box" />
+
+        <div class="modal-text">
+          <h3>Visual Identity, UI &amp; Component Design</h3>
+          <p>For this project, I was responsible for graphic design across all game components, collaborating closely with the illustrator, game designer and developers to shape the game's visual language.</p>
+          <p>This included cards (Deeds, Remnants, Curses, etc.), player boards, an iconography and typography system, and colour palettes and layout standards.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/Hollow_Pact_components_01.webp" alt="Hollow Pact components" />
+
+        <div class="modal-text">
+          <p>The goals for the design process were to balance:</p>
+          <ol>
+            <li><em>Atmosphere &amp; theme</em> — supporting the horror tone through typography, colour, and texture</li>
+            <li><em>Clarity &amp; usability</em> — ensuring players could quickly parse information during tense gameplay</li>
+          </ol>
+        </div>
+
+        <img class="modal-full-img" src="media/hollow_pact_Rulebook_01.webp" alt="Hollow Pact rulebook" />
+
+        <div class="modal-text">
+          <h3>Rulebook Design</h3>
+          <p>The graphic project culminated in the creation of a 50+ page Rulebook covering all game mechanics and scenarios. The Rulebook had two core design challenges:</p>
+          <ul>
+            <li>Teaching newcomers in a structured, approachable format</li>
+            <li>Serving as an in-game reference guide for more experienced players</li>
+          </ul>
+          <p>To support both use cases, the content was organised into digestible sections, introducing consistent hierarchy and integrating diagrams, examples, and component callouts. The rulebook went through multiple iterations, taking feedback from the designers and playtesters into account.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/hollow_pact_rulebook_02.webp" alt="Hollow Pact rulebook spread" />
+          <img src="media/hollow_pact_rulebook_03.webp" alt="Hollow Pact rulebook spread" />
+          <img src="media/hollow_pact_rulebook_04.webp" alt="Hollow Pact rulebook spread" />
+          <img src="media/hollow_pact_rulebook_05.webp" alt="Hollow Pact rulebook spread" />
+        </div>
+
+        <div class="modal-video-section">
+          <div class="modal-video-label">Trailer</div>
+          <div class="modal-video-grid">
+            <div class="video-wrap">
+              <iframe src="https://www.youtube.com/embed/WcLOdnWPYDs?si=4M6MwjmaKg7TT-Sp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-text">
+          <h3>3D Renders &amp; Trailer</h3>
+          <p>Beyond the printed materials, 3D product renders were created and used for Kickstarter marketing, social media campaigns, and retail previews. Additional 3D animations were also used in the game trailer, which presented the core mechanics and highlighted the game's tone, world-building, and visual identity.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/Hollow_Pact_components_02.webp" alt="Hollow Pact 3D render" />
+        <img class="modal-full-img" src="media/Hollow_Pact_components_03.webp" alt="Hollow Pact 3D render" />
+        <img class="modal-full-img" src="media/Hollow_Pact_components_04.webp" alt="Hollow Pact full render" />
+
+        <div class="modal-credits">
+          All illustrations by Aron Midhall.<br>
+          Additional graphic design by Francisco Brewer.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Playtesting Platform -->
+  <div class="modal-overlay" id="modal-playtest" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-playtest')">✕</div>
+      <img class="modal-img" src="media/playtesting_cover.webp" alt="Playtesting Platform" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">UI Design</span><span class="project-tag">UX Research</span><span class="project-tag">Dashboard</span></div>
+        <h2 class="modal-title">Playtesting Platform</h2>
+        <div class="modal-subtitle">Studio Midhall</div>
+
+        <div class="modal-text">
+          <p class="modal-intro">Studio Midhall needed a new digital playtesting platform that would allow playtesters to submit feedback after a play session of their board game. Their existing solution was focused on their previous game and was not flexible enough to accommodate new projects. Furthermore, it lacked key features, such as being able to edit or remove previous feedback.</p>
+          <p>The game designers required a system where they could track statistics across different game versions, view insights about the overall game, and check into feedback tied to specific components such as characters or mechanics.</p>
+
+          <h3>The Challenge</h3>
+          <p>To ensure the platform addressed both player and game designer needs, we worked closely with the developer and the game designers in workshops, mapping out:</p>
+          <ul>
+            <li>Which metrics were most important for evaluating the game</li>
+            <li>What kind of feedback was missing or unclear in the previous platform</li>
+            <li>Pain points in the existing playtesting workflow, both for players submitting feedback and designers reviewing it</li>
+          </ul>
+          <p>These workshops helped align the team around shared goals and established a clear foundation for the product.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/playtesting_revisions.webp" alt="Data structure diagram" />
+        <img class="modal-full-img" src="media/playtesting_users.webp" alt="User roles diagram" />
+
+        <div class="modal-text">
+          <h3>Users, Roles &amp; Data Structure</h3>
+          <p>Following the initial workshops, we defined the different user types and their responsibilities within the system: <em>Playtesters</em>, <em>Game Designers</em>, and <em>Admins</em>.</p>
+          <p>For each role, we outlined the core tasks they needed to complete and how the data should be structured, shaping both the information architecture and the user experience.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/playtesting_designer_01.webp" alt="Game designer overview dashboard" />
+
+        <div class="modal-gallery">
+          <img src="media/playtesting_designer_02.webp" alt="Game designer sessions view" />
+          <img src="media/playtesting_designer_03.webp" alt="Game designer session detail" />
+        </div>
+
+        <div class="modal-text">
+          <h3>Game Designer Experience</h3>
+          <p>For game designers, the platform focused on insight and flexibility. They needed to quickly understand how the game was performing while also being able to investigate specific details. The solution enabled designers to:</p>
+          <ul>
+            <li>View aggregated evaluation data across multiple sessions</li>
+            <li>Inspect individual play sessions in detail</li>
+            <li>Read qualitative comments from each tester</li>
+          </ul>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/playtesting_playtester_01.webp" alt="Playtester session entry flow" />
+          <img src="media/playtesting_playtester_02.webp" alt="Playtester evaluation form" />
+        </div>
+
+        <div class="modal-text">
+          <h3>Playtester Experience</h3>
+          <p>The playtester flow was designed to be as clear and effortless as possible, minimising friction so testers would be encouraged to add quality feedback. One playtester is responsible for creating a game session and inviting the other players. After the session, the flow guided them through:</p>
+          <ul>
+            <li>Entering objective data such as number of players, session length, and final result</li>
+            <li>Providing subjective feedback based on the predefined evaluation metrics</li>
+            <li>Adding feedback to specific components, if needed</li>
+          </ul>
+          <p>The interface emphasised clarity and simplicity, allowing players to focus on their experience rather than the effort of filling out a survey.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beast RPG -->
+  <div class="modal-overlay" id="modal-beast" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-beast')">✕</div>
+      <img class="modal-img" src="media/beastRPG_cover.webp" alt="Beast RPG" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">Art Direction</span><span class="project-tag">Layout</span><span class="project-tag">3D</span></div>
+        <h2 class="modal-title">Beast: The Roleplaying Game</h2>
+        <div class="modal-subtitle">Studio Midhall</div>
+
+        <div class="modal-text">
+          <p class="modal-intro">Beast: The Roleplaying Game is a tabletop RPG adaptation designed to be fully compatible with the 2024 edition of Dungeons &amp; Dragons 5th Edition. Led by designer Chris S. Sims, the project expands the core ruleset with a new playable class, over 30 subclasses, 40+ spells, 100+ monsters and more than seven titanic Beasts. It also introduces new mechanics such as Grudges and Corruption, as well as over 3 full-length adventures. The project was successfully funded on Kickstarter in November 2025.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/bestRPG_quickguide_01.webp" alt="Beast RPG preview guide" />
+
+        <div class="modal-text">
+          <h3>Preview Guide</h3>
+          <p>To support the Kickstarter campaign, a free 100+ page preview guide was released. This digital book presented the setting, new rules, spells, creatures, magic items, maps, and a complete introductory adventure.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/bestRPG_quickguide_02.webp" alt="Beast RPG preview guide spread" />
+          <img src="media/bestRPG_quickguide_03.webp" alt="Beast RPG preview guide spread" />
+          <img src="media/bestRPG_quickguide_04.webp" alt="Beast RPG preview guide spread" />
+          <img src="media/bestRPG_quickguide_05.webp" alt="Beast RPG preview guide spread" />
+        </div>
+
+        <div class="modal-text">
+          <h3>3D Renders</h3>
+          <p>High-quality 3D renders were produced to support the marketing strategy across multiple channels, including the Kickstarter campaign, influencer outreach and the project trailer. These assets helped communicate the visual identity of the world and contributed to the campaign's successful funding.</p>
+        </div>
+
+        <div class="modal-video-section">
+          <div class="modal-video-label">Trailer</div>
+          <div class="modal-video-grid">
+            <div class="video-wrap">
+              <iframe src="https://www.youtube.com/embed/Suk-DCkQwkU?si=7Ud8e5njvU8Sg4jh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
+        <img class="modal-full-img" src="media/beastRPG_render_01.webp" alt="Beast RPG 3D render" />
+
+        <div class="modal-gallery">
+          <img src="media/beastRPG_render_02.webp" alt="Beast RPG 3D render" />
+          <img src="media/beastRPG_render_03.webp" alt="Beast RPG 3D render" />
+        </div>
+
+        <img class="modal-full-img" src="media/beastRPG_covers.webp" alt="Beast RPG book covers" />
+
+        <div class="modal-credits">
+          Illustrations by Aron Midhall and Francisco Brewer.<br>
+          Additional graphic design by Francisco Brewer.<br>
+          Maps by Daniel Nilsson.<br>
+          Trailer by Big Fridge Productions.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Creator's Guild -->
+  <div class="modal-overlay" id="modal-guild" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-guild')">✕</div>
+      <img class="modal-img" src="media/cg_cover.webp" alt="Creator's Guild" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">UX/UI Design</span><span class="project-tag">Web</span></div>
+        <h2 class="modal-title">Creator's Guild</h2>
+        <div class="modal-subtitle">Studio Midhall</div>
+
+        <div class="modal-text">
+          <p class="modal-intro">Studio Midhall's Shattered Isles, the expansion for the board game Beast, was successfully crowdfunded in 2023. One of the stretch goals promised during the campaign was a dedicated website where players could create their own Contracts, Beasts and Hunters, adding replayability to the game through community-driven content.</p>
+          <p>An initial version of the tool was released shortly after the campaign, but it only allowed the creation of Contracts. Although fully functional, the experience lacked usability, discoverability, and responsiveness. There was a need to rethink and scale this early build into a more polished creation platform, eventually named the Creator's Guild.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/cg_user_research.webp" alt="User research affinity mapping" />
+
+        <div class="modal-text">
+          <h3>User Research, Information Architecture &amp; Flows</h3>
+          <p>To understand pain points and expectations, we asked members of the community who had been using the original Custom Contract tool about their experience. These conversations informed the new information architecture for the Studio Midhall website and defined how the Creator's Guild would integrate with player accounts and the main brand ecosystem. Establishing clear categories for Contracts, Beasts, and Hunters helped simplify navigation, while new features such as tagging, sorting and search addressed core usability gaps.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/cg_flow_01.webp" alt="User flow diagram" />
+          <img src="media/cg_flow_02.webp" alt="Information architecture" />
+        </div>
+
+        <div class="modal-text">
+          <h3>Wireframes, Look &amp; Feel</h3>
+          <p>With structure and features defined, we moved into wireframing for both desktop and mobile. The goal was to clarify hierarchy — what content mattered most — and to balance the familiarity that players had with the print material with a digital environment. For the visual identity, we drew inspiration from Studio Midhall's existing tone: dark fantasy, atmospheric, and immersive. Typography, colours, and image treatments were selected to feel cohesive with previous Beast materials, while still supporting a clean and functional creation interface.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/cg_visual.webp" alt="Visual identity and design system" />
+
+        <img class="modal-full-img" src="media/cg_wireframe.webp" alt="Wireframes — desktop and mobile" />
+
+        <div class="modal-text">
+          <h3>Final Design</h3>
+          <p>The final Creator's Guild allowed players to create not just Contracts, but also new Beasts and Hunters. It worked seamlessly across desktop and mobile and all existing user-created Contracts from the older system were successfully imported. Quality-of-life improvements transformed the experience: users could now tag creations, filter and sort results, manage translations, and generate print-friendly versions of their work.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/cg_final_01.webp" alt="Creator's Guild final design" />
+          <img src="media/cg_final_02.webp" alt="Creator's Guild final design" />
+          <img src="media/cg_final_03.webp" alt="Creator's Guild final design" />
+        </div>
+
+        <img class="modal-full-img" src="media/cg_mobile_final.webp" alt="Creator's Guild mobile design" />
+
+        <div class="modal-text">
+          <p>Physical print support was also implemented, since many board gamers prefer playing with printed cards.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/cg_print_friendly.webp" alt="Print-friendly output" />
+
+        <div class="modal-text">
+          <h3>Bundle Offering</h3>
+          <p>Both the previous version and the new Creator's Guild were a success. Thus, the best creations were bundled in a print version as one of the crowdfunding rewards.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/cg_custom_01.webp" alt="Custom contracts print bundle" />
+
+        <div class="modal-gallery">
+          <img src="media/cg_custom_02.webp" alt="Custom contract spread" />
+          <img src="media/cg_custom_03.webp" alt="Custom contract spread" />
+        </div>
+
+        <div class="modal-credits">
+          Design in collaboration with Oskar Lundkvist and Valeria Iezzi.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Arjo VTE -->
+  <div class="modal-overlay" id="modal-arjo-vte" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-arjo-vte')">✕</div>
+      <img class="modal-img" src="media/vte_cover.webp" alt="Arjo VTE Explorer" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">UI Design</span><span class="project-tag">3D</span><span class="project-tag">Three.js</span><span class="project-tag">MedTech</span></div>
+        <h2 class="modal-title">Arjo VTE Explorer</h2>
+        <div class="modal-subtitle">Devoteam Creative Tech</div>
+
+        <div class="modal-text">
+          <p class="modal-intro">Arjo is a medical device company based in Malmö focused on patient mobility — one of their products is a hospital bed for acute care.</p>
+          <p>VTE (Venous Thromboembolism) is the largest preventable cause of hospital deaths. While facilities and caregivers are aware of the risks and challenges, many lack the time and resources to implement optimal prevention methods. Arjo's Flowtron Active Compression System is a solution that offers a safe and convenient method of blood clot prevention, focusing on patient comfort.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/vte_product_01.webp" alt="Arjo VTE Explorer interface" />
+
+        <div class="modal-text">
+          <p>The Arjo VTE Explorer was designed to offer sales personnel or potential buyers an easy and approachable way of learning about their offering. Users can learn about causes and dangers of VTE and manipulate all Arjo products in a 3D environment.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/vte_product_02.webp" alt="VTE Explorer product view" />
+          <img src="media/vte_product_03.webp" alt="VTE Explorer interaction" />
+          <img src="media/vte_product_04.webp" alt="VTE Explorer ease of use" />
+          <img src="media/vte_product_05.webp" alt="VTE Explorer product detail" />
+        </div>
+
+        <div class="modal-text">
+          <p>The Flowtron Active Compression System is a pump that inflates garments around different parts of the leg, helping blood circulation. Arjo wanted to emphasise the ease of use of the equipment — thus one of the central features was the possibility of interacting digitally with the device. By following the same steps as they would on the real machine, users can learn how easy and quick the Flowtron setup is.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/vte_model_01.webp" alt="Flowtron 3D model" />
+
+        <div class="modal-text">
+          <p>All models were provided by the Arjo R&amp;D team — when that was not the case, they were modelled based on their feedback. They were then all textured to be compatible with the three.js web engine.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/vte_model_02.webp" alt="Flowtron 3D model variant" />
+          <img src="media/vte_model_03.webp" alt="Flowtron 3D model variant" />
+          <img src="media/vte_model_04.webp" alt="Flowtron garment model" />
+          <img src="media/vte_model_05.webp" alt="Flowtron garment model" />
+        </div>
+
+        <div class="modal-credits">
+          Design in collaboration with Valeria Iezzi.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Arjo Cumulus -->
+  <div class="modal-overlay" id="modal-arjo-cumulus" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-arjo-cumulus')">✕</div>
+      <img class="modal-img" src="media/cumulus_cover.webp" alt="Arjo Cumulus" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">UI Design</span><span class="project-tag">Dashboard</span><span class="project-tag">Three.js</span><span class="project-tag">MedTech</span></div>
+        <h2 class="modal-title">Arjo Cumulus Project</h2>
+        <div class="modal-subtitle">Devoteam Creative Tech</div>
+
+        <div class="modal-text">
+          <p class="modal-intro">The Cumulus project is a proof of concept showcasing the connectivity capabilities of the equipment and possible solution offerings from streaming data of the bed serial port to the cloud.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/cumulus_product_01.webp" alt="Arjo Cumulus bed monitoring detail" />
+
+        <div class="modal-text">
+          <p>This allows for remote monitoring of the bed status — such as backrest angle, brake state or bed height — which enables the user to see if the bed is following a <em>fall prevention protocol</em>, a set of safety measures that prevents patients from falling or leaving the bed.</p>
+          <p>The end result are dashboards that assist <em>nurses</em> in ward monitoring, <em>local administrators</em> in equipment management, and <em>Arjo employees</em> in client administration.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/cumulus_research.webp" alt="Cumulus research and user flows" />
+
+        <div class="modal-text">
+          <p>Research involved discussing different use cases and users with the stakeholder, defining key user flows and setting design requirements.</p>
+
+          <h3>Ward Monitoring</h3>
+          <p>For the ward monitoring, the challenges were twofold:</p>
+          <ul>
+            <li>Giving personnel <em>accurate and relevant information</em> in a quick manner</li>
+            <li>Displaying a <em>variable amount of beds</em> — wards could have from only six beds to hundreds, which directly affected the information density in a single screen</li>
+          </ul>
+        </div>
+
+        <img class="modal-full-img" src="media/cumulus_density_01.webp" alt="Cumulus ward overview with status cards" />
+        <img class="modal-full-img" src="media/cumulus_density_02.webp" alt="Cumulus density and component exploration" />
+
+        <div class="modal-text">
+          <h3>Other Dashboard Views</h3>
+          <p>Other parts of the dashboard included user and location management, event logs, and mockups for future scenarios such as fleet management and diagnostics.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/cumulus_product_02.webp" alt="Cumulus user and location management" />
+          <img src="media/cumulus_product_03.webp" alt="Cumulus event log timeline" />
+          <img src="media/cumulus_product_04.webp" alt="Cumulus fleet management view" />
+          <img src="media/cumulus_product_05.webp" alt="Cumulus diagnostics view" />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Superbolt NXT -->
+  <div class="modal-overlay" id="modal-superbolt" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-superbolt')">✕</div>
+      <img class="modal-img" src="media/nxt_cover.webp" alt="Superbolt NXT" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">Visual Design</span><span class="project-tag">3D</span><span class="project-tag">Brand</span></div>
+        <h2 class="modal-title">Superbolt NXT</h2>
+        <div class="modal-subtitle">Nord-Lock Group</div>
+
+        <div class="modal-video-section">
+          <div class="modal-video-grid">
+            <div class="video-wrap">
+              <iframe src="https://www.youtube.com/embed/R2X6NCUCXgY?si=NJ1ddvzsnsW5fB1h" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-text">
+          <p class="modal-intro">Released in 2022, the Superbolt NXT is the next version of multi-jackbolt tensioners — a type of nut designed for tightening large bolts, where the torque requirements are too high for conventional tools.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/nxt_diagram.webp" alt="Superbolt NXT mechanism diagram" />
+
+        <div class="modal-text">
+          <p>Nord-Lock Group needed to communicate the advantages of the new features for existing customers and increase awareness for potential new users in the EMEA market. Since the tensioner was only a prototype at the time, a <em>high-fidelity 3D version</em> was modelled and textured from scratch in Blender and Substance Painter:</p>
+        </div>
+
+        <img class="modal-full-img" src="media/nxt_comparison.webp" alt="Superbolt NXT 3D model wireframe and final render" />
+
+        <div class="modal-text">
+          <p>Additional materials included a <em>landing page</em>, product <em>animations</em>, manuals and quick-start guides, technical guides, brochures, and <em>social media communication</em> — all built around a cohesive visual language developed for the product launch.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/nxt_applications.webp" alt="Superbolt NXT applications" />
+        <img class="modal-full-img" src="media/nxt_sizes.webp" alt="Superbolt NXT size range" />
+
+        <div class="modal-gallery">
+          <img src="media/nxt_feature_01.webp" alt="Superbolt NXT feature — technical info" />
+          <img src="media/nxt_feature_02.webp" alt="Superbolt NXT feature — knurling grip layer" />
+          <img src="media/nxt_feature_03.webp" alt="Superbolt NXT feature — fewer and stronger jackbolts" />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bolted Magazine -->
+  <div class="modal-overlay" id="modal-bolted" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-bolted')">✕</div>
+      <img class="modal-img" src="media/bolted_cover_thumbnail.webp" alt="Bolted Magazine" />
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">Art Direction</span><span class="project-tag">Editorial</span><span class="project-tag">Motion</span></div>
+        <h2 class="modal-title">Bolted Magazine</h2>
+        <div class="modal-subtitle">Nord-Lock Group</div>
+
+        <div class="modal-text">
+          <p class="modal-intro">Bolted is a magazine published by Nord-Lock Group with the objective of sharing bolting knowledge and industry insights. The magazine was produced together with the engineering team, journalists, and the marketing department.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/bolted_cover.webp" alt="Bolted Magazine covers across languages" />
+
+        <div class="modal-text">
+          <p>It is published <em>twice a year</em> in <em>10 different languages</em>, including Chinese, English, Finnish, French, German, Italian, Japanese, Korean, Spanish, and Swedish.</p>
+        </div>
+
+        <img class="modal-full-img" src="media/bolted_mockup_01.webp" alt="Bolted Magazine interior spreads" />
+
+        <div class="modal-text">
+          <p>Some of the material can be quite technical. The illustrations and diagrams were done in close collaboration with the engineers, to ensure that all information is accurate.</p>
+        </div>
+
+        <div class="modal-gallery">
+          <img src="media/bolted_mockup_02.webp" alt="Bolted Magazine spread" />
+          <img src="media/bolted_mockup_03.webp" alt="Bolted Magazine spread" />
+          <img src="media/bolted_mockup_04.webp" alt="Bolted Magazine spread" />
+          <img src="media/bolted_mockup_05.webp" alt="Bolted Magazine spread" />
+        </div>
+
+        <div class="modal-text">
+          <p>Making the magazine is only one part of the process: during the year we are constantly publishing the content on social media. This includes advertising the magazine itself, as shown here.</p>
+        </div>
+
+        <div class="modal-video-section">
+          <div class="modal-video-grid">
+            <div class="video-wrap">
+              <iframe src="https://www.youtube.com/embed/w71_mDnaBOo?si=QFhOM_SH0a7Un9Zb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-wrap">
+              <iframe src="https://www.youtube.com/embed/3v0v9bp8uSA?si=dXyjk1Gy0iy8i-Vl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── JAVASCRIPT ──────────────────────────────────────────── -->
+  <script>
+    // ─── MODALS (global scope for onclick attributes) ─────────
+    const modalCloseFixed = document.getElementById('modalCloseFixed');
+    let activeModalId = null;
+
+    function openModal(id) {
+      const overlay = document.getElementById(id);
+      overlay.scrollTop = 0;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      activeModalId = id;
+      modalCloseFixed.classList.add('visible');
+    }
+    function closeModal(e, overlay) {
+      if (e.target === overlay) {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        activeModalId = null;
+        modalCloseFixed.classList.remove('visible');
+      }
+    }
+    function closeModalById(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+      activeModalId = null;
+      modalCloseFixed.classList.remove('visible');
+    }
+    modalCloseFixed.addEventListener('click', () => {
+      if (activeModalId) closeModalById(activeModalId);
+    });
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // ─── HAMBURGER ───────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function toggleMenu(open) {
+      hamburger.classList.toggle('open', open);
+      mobileMenu.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      toggleMenu(!mobileMenu.classList.contains('open'));
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => toggleMenu(false));
+    });
+
+    // ─── ESCAPE KEY ──────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      if (mobileMenu.classList.contains('open')) { toggleMenu(false); return; }
+      document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+      activeModalId = null;
+      modalCloseFixed.classList.remove('visible');
+    });
+
+    // ─── SCROLL REVEAL ───────────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+
+  
+  });
+  </script>
+</body>
+</html>
