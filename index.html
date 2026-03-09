@@ -18,6 +18,9 @@
   <meta name="twitter:title" content="Gabriel Jacobi — Designer" />
   <meta name="twitter:description" content="UX, brand, and visual designer based in Malmö, Sweden." />
   <meta name="twitter:image" content="https://gabrieljacobi-prog.github.io/media/playtesting_cover.webp" />
+  <link rel="icon" type="image/svg+xml" href="media/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,300&display=swap" rel="stylesheet">
@@ -97,6 +100,10 @@
       50%  { transform: scale(1.08) translate(-1.5%, -1%); }
       100% { transform: scale(1.0) translate(0%, 0%); }
     }
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
     #hero {
       position: relative; width: 100%; height: 100vh;
       min-height: 560px; overflow: hidden;
@@ -105,10 +112,34 @@
     .hero-bg-img {
       position: absolute; inset: 0; z-index: 0;
     }
+    /* Skeleton shimmer shown before video plays */
+    .hero-bg-img::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(
+        105deg,
+        #1e1f22 0%, #1e1f22 30%,
+        #2c2d32 50%,
+        #1e1f22 70%, #1e1f22 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.6s ease-in-out infinite;
+      transition: opacity 0.6s ease;
+    }
+    .hero-bg-img.loaded::before {
+      opacity: 0;
+      pointer-events: none;
+    }
     .hero-bg-img img,
     .hero-bg-img video {
       width: 100%; height: 100%; object-fit: cover; object-position: center 40%;
       display: block;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    .hero-bg-img.loaded img,
+    .hero-bg-img.loaded video {
+      opacity: 1;
     }
     .hero-bg-img img {
       animation: kenBurns 18s ease-in-out infinite;
@@ -266,6 +297,9 @@
       transition: opacity var(--transition), transform var(--transition);
     }
     .project-card:hover .project-arrow { opacity: 1; transform: translateX(0); }
+    @media (hover: none) {
+      .project-arrow { opacity: 1; transform: translateX(0); }
+    }
 
     /* ─── MODAL ────────────────────────────────────────────── */
     .modal-overlay {
@@ -341,6 +375,13 @@
 
     .modal-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
     .modal-gallery img { border-radius: 8px; width: 100%; height: auto; object-fit: contain; background: transparent; }
+    .modal-cats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .modal-cat-card { display: flex; flex-direction: column; gap: 0.7rem; }
+    .modal-cat-card img { width: 100%; border-radius: 10px; object-fit: cover; aspect-ratio: 3/4; }
+    .modal-cat-name {
+      font-family: 'Spectral', Georgia, serif; font-size: 1rem; font-weight: 600;
+      color: var(--white); text-align: center; letter-spacing: 0.02em;
+    }
 
     .modal-credits { font-size: 0.85rem; color: var(--muted); margin-top: 2.5rem; line-height: 1.8; border-top: 1px solid var(--border); padding-top: 1.2rem; }
 
@@ -502,6 +543,14 @@
     .beyond-text { flex: 1; }
     .beyond-text p { color: var(--muted); font-size: 1.15rem; line-height: 1.85; }
     .beyond-text em { color: var(--orange); font-style: normal; font-weight: 600; }
+    .cats-link {
+      color: inherit; text-decoration: none;
+      border-bottom: 1px dashed rgba(240,96,48,0.5);
+      transition: border-color var(--transition), color var(--transition);
+      cursor: pointer;
+    }
+    .cats-link:hover { border-bottom-color: var(--orange); color: var(--text); }
+    .cats-link em { color: var(--orange); font-style: normal; font-weight: 600; }
     @media (max-width: 700px) {
       .beyond-inner { flex-direction: column; gap: 2rem; align-items: flex-start; }
       .beyond-photo-wrap { width: 200px; height: 200px; }
@@ -563,8 +612,8 @@
 
   <!-- ─── HERO v4 — Single featured ──────────────────────── -->
   <section id="hero">
-    <div class="hero-bg-img">
-      <video autoplay muted loop playsinline>
+    <div class="hero-bg-img" id="heroBgImg">
+      <video id="heroVideo" autoplay muted loop playsinline poster="media/playtesting_cover.webp">
         <source src="media/hero-playtesting.webm" type="video/webm" />
         <source src="media/hero-playtesting.mp4" type="video/mp4" />
       </video>
@@ -638,7 +687,7 @@
         </div>
         <div class="beyond-text">
           <div class="section-label">Beyond the Studio</div>
-          <p>Outside of work, I'm an avid reader — from literary fiction, the playful mischievousness of Latin American writing to comics and sci-fi. I love a good film or an adventure puzzle game, and I'm always mid-way through some sprawling RPG. I also enjoy long distance running: I can go for hours in a trail run with a good audiobook or podcast. But above all, I enjoy the company of my beautiful cats, <em>Hermes</em> and <em>Selene</em>.</p>
+          <p>Outside of work, I'm an avid reader — from literary fiction, the playful mischievousness of Latin American writing to comics and sci-fi. I love a good film or an adventure puzzle game, and I'm always mid-way through some sprawling RPG. I also enjoy long distance running: I can go for hours in a trail run with a good audiobook or podcast. But above all, I enjoy the company of my beautiful cats, <a class="cats-link" onclick="openModal('modal-hermes')" href="#"><em>Hermes</em></a> and <a class="cats-link" onclick="openModal('modal-selene')" href="#"><em>Selene</em></a>.</p>
           <div class="skills-tags" style="margin-top: 1.4rem;">
             <span class="tag">Moebius</span>
             <span class="tag">Babylon 5</span>
@@ -839,6 +888,31 @@
   </footer>
 
   <!-- ═══ MODALS ════════════════════════════════════════════════ -->
+
+  <!-- Cats -->
+  <!-- Hermes -->
+  <div class="modal-overlay" id="modal-hermes" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-hermes')">✕</div>
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">Chief Distraction</span></div>
+        <h2 class="modal-title">Hermes</h2>
+        <img class="modal-full-img" src="media/hermes.webp" alt="Hermes the cat" style="margin-top:1.5rem;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Selene -->
+  <div class="modal-overlay" id="modal-selene" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-selene')">✕</div>
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">Chief Distraction</span></div>
+        <h2 class="modal-title">Selene</h2>
+        <img class="modal-full-img" src="media/selene.webp" alt="Selene the cat" style="margin-top:1.5rem;" />
+      </div>
+    </div>
+  </div>
 
   <!-- Hollow Pact -->
   <div class="modal-overlay" id="modal-hollow" onclick="closeModal(event, this)">
@@ -1401,6 +1475,16 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ─── HERO SKELETON ───────────────────────────────────────
+    const heroBgImg = document.getElementById('heroBgImg');
+    const heroVideo = document.getElementById('heroVideo');
+    function markHeroLoaded() { heroBgImg.classList.add('loaded'); }
+    // canplay fires as soon as there's enough data to start playback
+    heroVideo.addEventListener('canplay', markHeroLoaded, { once: true });
+    // Fallback: if video errors or is blocked, still reveal after 2s
+    heroVideo.addEventListener('error', markHeroLoaded, { once: true });
+    setTimeout(markHeroLoaded, 2000);
 
 
   
