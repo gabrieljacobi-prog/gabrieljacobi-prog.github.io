@@ -4,6 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gabriel Jacobi — Designer</title>
+  <meta name="description" content="Portfolio of Gabriel Jacobi — UX, brand, and visual designer based in Malmö, Sweden. 10 years of experience across game studios, global corporations, and design consultancies." />
+
+  <!-- Open Graph / URL preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://gabrieljacobi-prog.github.io/" />
+  <meta property="og:title" content="Gabriel Jacobi — Designer" />
+  <meta property="og:description" content="UX, brand, and visual designer based in Malmö, Sweden. 10 years of experience across game studios, global corporations, and design consultancies." />
+  <meta property="og:image" content="https://gabrieljacobi-prog.github.io/media/playtesting_cover.webp" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gabriel Jacobi — Designer" />
+  <meta name="twitter:description" content="UX, brand, and visual designer based in Malmö, Sweden." />
+  <meta name="twitter:image" content="https://gabrieljacobi-prog.github.io/media/playtesting_cover.webp" />
+  <link rel="icon" type="image/svg+xml" href="media/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,300&display=swap" rel="stylesheet">
@@ -83,6 +100,10 @@
       50%  { transform: scale(1.08) translate(-1.5%, -1%); }
       100% { transform: scale(1.0) translate(0%, 0%); }
     }
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
     #hero {
       position: relative; width: 100%; height: 100vh;
       min-height: 560px; overflow: hidden;
@@ -91,9 +112,36 @@
     .hero-bg-img {
       position: absolute; inset: 0; z-index: 0;
     }
-    .hero-bg-img img {
+    /* Skeleton shimmer shown before video plays */
+    .hero-bg-img::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(
+        105deg,
+        #1e1f22 0%, #1e1f22 30%,
+        #2c2d32 50%,
+        #1e1f22 70%, #1e1f22 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.6s ease-in-out infinite;
+      transition: opacity 0.6s ease;
+    }
+    .hero-bg-img.loaded::before {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .hero-bg-img img,
+    .hero-bg-img video {
       width: 100%; height: 100%; object-fit: cover; object-position: center 40%;
       display: block;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    .hero-bg-img.loaded img,
+    .hero-bg-img.loaded video {
+      opacity: 1;
+    }
+    .hero-bg-img img {
       animation: kenBurns 18s ease-in-out infinite;
       transform-origin: center center;
     }
@@ -178,7 +226,7 @@
     #about { background: var(--surface); }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
     .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 1.15rem; }
-    .about-text p strong { color: var(--text); font-weight: 600; }
+    .about-text p em { color: var(--orange); font-weight: 600; font-style: normal; }
     .info-block { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
     .info-row { display: flex; gap: 1rem; font-size: 0.97rem; }
     .info-label { color: var(--orange); min-width: 80px; font-weight: 700; }
@@ -199,7 +247,7 @@
     .tag:hover { border-color: var(--orange); color: var(--orange); }
 
     /* ─── EXPERIENCE ───────────────────────────────────────── */
-    #experience { background: var(--bg); }
+    #experience { background: var(--surface); }
     .timeline { display: flex; flex-direction: column; }
     .timeline-item {
       display: grid; grid-template-columns: 160px 1fr; gap: 2.5rem;
@@ -212,7 +260,7 @@
     .timeline-desc { font-size: 1.05rem; color: var(--muted); }
 
     /* ─── PROJECTS ─────────────────────────────────────────── */
-    #projects { background: var(--surface); }
+    #projects { background: var(--bg); }
     .projects-intro { max-width: 600px; color: var(--muted); margin-bottom: 3.5rem; font-size: 1.12rem; }
     .projects-grid {
       display: grid;
@@ -220,7 +268,7 @@
       gap: 1.5rem;
     }
     .project-card {
-      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       overflow: hidden; cursor: pointer;
       transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
     }
@@ -249,6 +297,9 @@
       transition: opacity var(--transition), transform var(--transition);
     }
     .project-card:hover .project-arrow { opacity: 1; transform: translateX(0); }
+    @media (hover: none) {
+      .project-arrow { opacity: 1; transform: translateX(0); }
+    }
 
     /* ─── MODAL ────────────────────────────────────────────── */
     .modal-overlay {
@@ -290,7 +341,7 @@
     .modal-text p { margin-bottom: 1.1rem; }
 
     /* Bold in accent color */
-    .modal-text strong, .modal-intro strong { color: var(--orange); font-weight: 600; }
+    .modal-text em, .modal-intro em { color: var(--orange); font-weight: 600; font-style: normal; }
 
     /* Section headers */
     .modal-text h3 {
@@ -324,6 +375,13 @@
 
     .modal-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
     .modal-gallery img { border-radius: 8px; width: 100%; height: auto; object-fit: contain; background: transparent; }
+    .modal-cats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .modal-cat-card { display: flex; flex-direction: column; gap: 0.7rem; }
+    .modal-cat-card img { width: 100%; border-radius: 10px; object-fit: cover; aspect-ratio: 3/4; }
+    .modal-cat-name {
+      font-family: 'Spectral', Georgia, serif; font-size: 1rem; font-weight: 600;
+      color: var(--white); text-align: center; letter-spacing: 0.02em;
+    }
 
     .modal-credits { font-size: 0.85rem; color: var(--muted); margin-top: 2.5rem; line-height: 1.8; border-top: 1px solid var(--border); padding-top: 1.2rem; }
 
@@ -485,6 +543,14 @@
     .beyond-text { flex: 1; }
     .beyond-text p { color: var(--muted); font-size: 1.15rem; line-height: 1.85; }
     .beyond-text em { color: var(--orange); font-style: normal; font-weight: 600; }
+    .cats-link {
+      color: inherit; text-decoration: none;
+      border-bottom: 1px dashed rgba(240,96,48,0.5);
+      transition: border-color var(--transition), color var(--transition);
+      cursor: pointer;
+    }
+    .cats-link:hover { border-bottom-color: var(--orange); color: var(--text); }
+    .cats-link em { color: var(--orange); font-style: normal; font-weight: 600; }
     @media (max-width: 700px) {
       .beyond-inner { flex-direction: column; gap: 2rem; align-items: flex-start; }
       .beyond-photo-wrap { width: 200px; height: 200px; }
@@ -495,14 +561,21 @@
       .hamburger { display: flex; }
       .mobile-menu { display: flex; }
       .projects-grid { grid-template-columns: 1fr; }
+      .project-title { font-size: 1rem; }
+      .project-desc { font-size: 0.85rem; }
       .edu-grid { grid-template-columns: 1fr; }
       .hero-name { font-size: clamp(2.8rem, 13vw, 4rem); }
-      .hero-ctas { justify-content: center; width: 100%; }
+      .hero-ctas { justify-content: center; width: 100%; flex-direction: column; align-items: center; }
       .hero-ctas .btn-primary,
-      .hero-ctas .btn-secondary { flex: 1; text-align: center; }
+      .hero-ctas .btn-secondary { width: 100%; text-align: center; }
       .hero-scroll { display: none; }
       footer { flex-direction: column; gap: 0.5rem; text-align: center; }
       .modal-body { padding: 1.5rem; }
+      .modal-overlay { padding: 0.5rem; }
+      .modal-title { font-size: 1.6rem; }
+      .modal-intro { font-size: 1.05rem; }
+      .modal-text { font-size: 0.95rem; }
+      .modal-gallery { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -517,8 +590,8 @@
     <span class="nav-logo">Gabriel <span>Jacobi</span></span>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Work</a></li>
+      <li><a href="#experience">Experience</a></li>
       <li><a href="#education">Education</a></li>
     </ul>
     <a href="https://www.linkedin.com/in/gabrieljacobi/" target="_blank" rel="noopener noreferrer" class="nav-cta">Get in touch</a>
@@ -530,8 +603,8 @@
   <!-- ─── MOBILE MENU ──────────────────────────────────────── -->
   <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Navigation menu">
     <a href="#about" class="mobile-nav-link">About</a>
-    <a href="#experience" class="mobile-nav-link">Experience</a>
     <a href="#projects" class="mobile-nav-link">Work</a>
+    <a href="#experience" class="mobile-nav-link">Experience</a>
     <a href="#education" class="mobile-nav-link">Education</a>
     <a href="#contact" class="mobile-nav-link">Contact</a>
     <a href="https://www.linkedin.com/in/gabrieljacobi/" target="_blank" rel="noopener noreferrer" class="mobile-menu-cta">Get in touch</a>
@@ -539,8 +612,11 @@
 
   <!-- ─── HERO v4 — Single featured ──────────────────────── -->
   <section id="hero">
-    <div class="hero-bg-img">
-      <img src="media/hero-temp.webp" alt="Playtesting Platform" />
+    <div class="hero-bg-img" id="heroBgImg">
+      <video id="heroVideo" autoplay muted loop playsinline poster="media/playtesting_cover.webp">
+        <source src="media/hero-playtesting.webm" type="video/webm" />
+        <source src="media/hero-playtesting.mp4" type="video/mp4" />
+      </video>
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -566,7 +642,7 @@
           <div class="section-label">Profile</div>
           <h2 class="section-title">Curious. Detailed.<br>Adaptable.</h2>
           <div class="divider"></div>
-          <p>I'm a designer based in <strong>Malmö, Sweden</strong>, with <strong>10 years of experience</strong> working in-house, as a consultant, and within design studios. I've collaborated with global companies on print and digital design solutions, along with 3D and motion graphics across a range of industries.</p>
+          <p>I'm a designer based in <em>Malmö, Sweden</em>, with <em>10 years of experience</em> working in-house, as a consultant, and within design studios. I've collaborated with global companies on print and digital design solutions, along with 3D and motion graphics across a range of industries.</p>
           <p>I'm driven by curiosity and attention to detail, and I'm always looking for opportunities to grow and learn new skills. This mindset keeps my creative approach fresh and adaptable to different clients and projects.</p>
         </div>
         <div class="reveal">
@@ -611,53 +687,22 @@
         </div>
         <div class="beyond-text">
           <div class="section-label">Beyond the Studio</div>
-          <p>Outside of work, I'm an avid reader — from literary fiction, the playful mischievousness of Latin American writing to comics and sci-fi. I love a good film or an adventure puzzle game, and I'm always mid-way through some sprawling RPG. I also enjoy long distance running: I can go for hours in a trail run with a good audiobook or podcast. But above all, I enjoy the company of my beautiful cats, <em>Hermes</em> and <em>Selene</em>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section id="experience">
-    <div class="container">
-      <div class="section-label reveal">Work Experience</div>
-      <h2 class="section-title reveal">Where I've worked</h2>
-      <div class="divider reveal"></div>
-      <div class="timeline">
-        <div class="timeline-item reveal">
-          <div class="timeline-date">2024 — Present</div>
-          <div class="timeline-content">
-            <h3>Lead UX Designer</h3>
-            <div class="timeline-company">Studio Midhall</div>
-            <p class="timeline-desc">Design and User Experience including game development, communication material, website and internal tools. Leading UX across digital and print product lines for an independent board game studio.</p>
-          </div>
-        </div>
-        <div class="timeline-item reveal">
-          <div class="timeline-date">2022 — 2024</div>
-          <div class="timeline-content">
-            <h3>Digital Product Designer</h3>
-            <div class="timeline-company">Devoteam Creative Tech</div>
-            <p class="timeline-desc">UX/UI design in a cross-functional team and agile environment, delivering digital product solutions for a range of clients.</p>
-          </div>
-        </div>
-        <div class="timeline-item reveal">
-          <div class="timeline-date">2016 — 2022</div>
-          <div class="timeline-content">
-            <h3>Brand Designer</h3>
-            <div class="timeline-company">Nord-Lock Group</div>
-            <p class="timeline-desc">In-house designer working with both print and digital materials, offering support for the entire Global Team. Created visual assets, publications, 3D animations, and brand communications across markets worldwide.</p>
-          </div>
-        </div>
-        <div class="timeline-item reveal">
-          <div class="timeline-date">2014 — 2016</div>
-          <div class="timeline-content">
-            <h3>Brand Designer</h3>
-            <div class="timeline-company">commceptaDesign</div>
-            <p class="timeline-desc">Designed print materials for major clients including Volvo, Telefónica, and Editora Positivo.</p>
+          <p>Outside of work, I'm an avid reader — from literary fiction, the playful mischievousness of Latin American writing to comics and sci-fi. I love a good film or an adventure puzzle game, and I'm always mid-way through some sprawling RPG. I also enjoy long distance running: I can go for hours in a trail run with a good audiobook or podcast. But above all, I enjoy the company of my beautiful cats, <a class="cats-link" onclick="openModal('modal-hermes'); return false;" href="#"><em>Hermes</em></a> and <a class="cats-link" onclick="openModal('modal-selene'); return false;" href="#"><em>Selene</em></a>.</p>
+          <div class="skills-tags" style="margin-top: 1.4rem;">
+            <span class="tag">Moebius</span>
+            <span class="tag">Babylon 5</span>
+            <span class="tag">A 90km run, why not</span>
+            <span class="tag">Loom</span>
+            <span class="tag">2666</span>
+            <span class="tag">Gene Wolfe</span>
+            <span class="tag">Cats</span>
+            <span class="tag">Borges</span>
+            <span class="tag">Ursula K. Le Guin</span>
           </div>
         </div>
       </div>
     </div>
   </section>
-
   <!-- ─── PROJECTS ──────────────────────────────────────────── -->
   <section id="projects">
     <div class="container">
@@ -751,6 +796,48 @@
     </div>
   </section>
 
+  <section id="experience">
+    <div class="container">
+      <div class="section-label reveal">Work Experience</div>
+      <h2 class="section-title reveal">Where I've worked</h2>
+      <div class="divider reveal"></div>
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2024 — Present</div>
+          <div class="timeline-content">
+            <h3>Lead UX Designer</h3>
+            <div class="timeline-company">Studio Midhall</div>
+            <p class="timeline-desc">Design and User Experience including game development, communication material, website and internal tools. Leading UX across digital and print product lines for an independent board game studio.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2022 — 2024</div>
+          <div class="timeline-content">
+            <h3>Digital Product Designer</h3>
+            <div class="timeline-company">Devoteam Creative Tech</div>
+            <p class="timeline-desc">UX/UI design in a cross-functional team and agile environment, delivering digital product solutions for a range of clients.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2016 — 2022</div>
+          <div class="timeline-content">
+            <h3>Brand Designer</h3>
+            <div class="timeline-company">Nord-Lock Group</div>
+            <p class="timeline-desc">In-house designer working with both print and digital materials, offering support for the entire Global Team. Created visual assets, publications, 3D animations, and brand communications across markets worldwide.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-date">2014 — 2016</div>
+          <div class="timeline-content">
+            <h3>Brand Designer</h3>
+            <div class="timeline-company">commceptaDesign</div>
+            <p class="timeline-desc">Designed print materials for major clients including Volvo, Telefónica, and Editora Positivo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ─── EDUCATION ─────────────────────────────────────────── -->
   <section id="education">
     <div class="container">
@@ -796,11 +883,36 @@
 
   <!-- ─── FOOTER ─────────────────────────────────────────────── -->
   <footer>
-    <span>© <span id="copyright-year"></span> Gabriel Jacobi. All rights reserved.</span>
+    <span>© 2025 Gabriel Jacobi. All rights reserved.</span>
     <span>Malmö, Sweden</span>
   </footer>
 
   <!-- ═══ MODALS ════════════════════════════════════════════════ -->
+
+  <!-- Cats -->
+  <!-- Hermes -->
+  <div class="modal-overlay" id="modal-hermes" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-hermes')">✕</div>
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">Chief Distraction</span></div>
+        <h2 class="modal-title">Hermes</h2>
+        <img class="modal-full-img" src="media/hermes.webp" alt="Hermes the cat" style="margin-top:1.5rem;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Selene -->
+  <div class="modal-overlay" id="modal-selene" onclick="closeModal(event, this)">
+    <div class="modal">
+      <div class="modal-close" onclick="closeModalById('modal-selene')">✕</div>
+      <div class="modal-body">
+        <div class="modal-tags"><span class="project-tag">Chief Distraction</span></div>
+        <h2 class="modal-title">Selene</h2>
+        <img class="modal-full-img" src="media/selene.webp" alt="Selene the cat" style="margin-top:1.5rem;" />
+      </div>
+    </div>
+  </div>
 
   <!-- Hollow Pact -->
   <div class="modal-overlay" id="modal-hollow" onclick="closeModal(event, this)">
@@ -828,8 +940,8 @@
         <div class="modal-text">
           <p>The goals for the design process were to balance:</p>
           <ol>
-            <li><strong>Atmosphere &amp; theme</strong> — supporting the horror tone through typography, colour, and texture</li>
-            <li><strong>Clarity &amp; usability</strong> — ensuring players could quickly parse information during tense gameplay</li>
+            <li><em>Atmosphere &amp; theme</em> — supporting the horror tone through typography, colour, and texture</li>
+            <li><em>Clarity &amp; usability</em> — ensuring players could quickly parse information during tense gameplay</li>
           </ol>
         </div>
 
@@ -907,7 +1019,7 @@
 
         <div class="modal-text">
           <h3>Users, Roles &amp; Data Structure</h3>
-          <p>Following the initial workshops, we defined the different user types and their responsibilities within the system: <strong>Playtesters</strong>, <strong>Game Designers</strong>, and <strong>Admins</strong>.</p>
+          <p>Following the initial workshops, we defined the different user types and their responsibilities within the system: <em>Playtesters</em>, <em>Game Designers</em>, and <em>Admins</em>.</p>
           <p>For each role, we outlined the core tasks they needed to complete and how the data should be structured, shaping both the information architecture and the user experience.</p>
         </div>
 
@@ -1153,8 +1265,8 @@
         <img class="modal-full-img" src="media/cumulus_product_01.webp" alt="Arjo Cumulus bed monitoring detail" />
 
         <div class="modal-text">
-          <p>This allows for remote monitoring of the bed status — such as backrest angle, brake state or bed height — which enables the user to see if the bed is following a <strong>fall prevention protocol</strong>, a set of safety measures that prevents patients from falling or leaving the bed.</p>
-          <p>The end result are dashboards that assist <strong>nurses</strong> in ward monitoring, <strong>local administrators</strong> in equipment management, and <strong>Arjo employees</strong> in client administration.</p>
+          <p>This allows for remote monitoring of the bed status — such as backrest angle, brake state or bed height — which enables the user to see if the bed is following a <em>fall prevention protocol</em>, a set of safety measures that prevents patients from falling or leaving the bed.</p>
+          <p>The end result are dashboards that assist <em>nurses</em> in ward monitoring, <em>local administrators</em> in equipment management, and <em>Arjo employees</em> in client administration.</p>
         </div>
 
         <img class="modal-full-img" src="media/cumulus_research.webp" alt="Cumulus research and user flows" />
@@ -1165,8 +1277,8 @@
           <h3>Ward Monitoring</h3>
           <p>For the ward monitoring, the challenges were twofold:</p>
           <ul>
-            <li>Giving personnel <strong>accurate and relevant information</strong> in a quick manner</li>
-            <li>Displaying a <strong>variable amount of beds</strong> — wards could have from only six beds to hundreds, which directly affected the information density in a single screen</li>
+            <li>Giving personnel <em>accurate and relevant information</em> in a quick manner</li>
+            <li>Displaying a <em>variable amount of beds</em> — wards could have from only six beds to hundreds, which directly affected the information density in a single screen</li>
           </ul>
         </div>
 
@@ -1214,13 +1326,13 @@
         <img class="modal-full-img" src="media/nxt_diagram.webp" alt="Superbolt NXT mechanism diagram" />
 
         <div class="modal-text">
-          <p>Nord-Lock Group needed to communicate the advantages of the new features for existing customers and increase awareness for potential new users in the EMEA market. Since the tensioner was only a prototype at the time, a <strong>high-fidelity 3D version</strong> was modelled and textured from scratch in Blender and Substance Painter:</p>
+          <p>Nord-Lock Group needed to communicate the advantages of the new features for existing customers and increase awareness for potential new users in the EMEA market. Since the tensioner was only a prototype at the time, a <em>high-fidelity 3D version</em> was modelled and textured from scratch in Blender and Substance Painter:</p>
         </div>
 
         <img class="modal-full-img" src="media/nxt_comparison.webp" alt="Superbolt NXT 3D model wireframe and final render" />
 
         <div class="modal-text">
-          <p>Additional materials included a <strong>landing page</strong>, product <strong>animations</strong>, manuals and quick-start guides, technical guides, brochures, and <strong>social media communication</strong> — all built around a cohesive visual language developed for the product launch.</p>
+          <p>Additional materials included a <em>landing page</em>, product <em>animations</em>, manuals and quick-start guides, technical guides, brochures, and <em>social media communication</em> — all built around a cohesive visual language developed for the product launch.</p>
         </div>
 
         <img class="modal-full-img" src="media/nxt_applications.webp" alt="Superbolt NXT applications" />
@@ -1253,7 +1365,7 @@
         <img class="modal-full-img" src="media/bolted_cover.webp" alt="Bolted Magazine covers across languages" />
 
         <div class="modal-text">
-          <p>It is published <strong>twice a year</strong> in <strong>10 different languages</strong>, including Chinese, English, Finnish, French, German, Italian, Japanese, Korean, Spanish, and Swedish.</p>
+          <p>It is published <em>twice a year</em> in <em>10 different languages</em>, including Chinese, English, Finnish, French, German, Italian, Japanese, Korean, Spanish, and Swedish.</p>
         </div>
 
         <img class="modal-full-img" src="media/bolted_mockup_01.webp" alt="Bolted Magazine interior spreads" />
@@ -1290,31 +1402,7 @@
 
   <!-- ─── JAVASCRIPT ──────────────────────────────────────────── -->
   <script>
-  document.addEventListener("DOMContentLoaded", function() {
-
-    // ─── COPYRIGHT YEAR ──────────────────────────────────────
-    document.getElementById('copyright-year').textContent = new Date().getFullYear();
-
-    // ─── HAMBURGER ───────────────────────────────────────────
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    function toggleMenu(open) {
-      hamburger.classList.toggle('open', open);
-      mobileMenu.classList.toggle('open', open);
-      hamburger.setAttribute('aria-expanded', String(open));
-      document.body.style.overflow = open ? 'hidden' : '';
-    }
-
-    hamburger.addEventListener('click', () => {
-      toggleMenu(!mobileMenu.classList.contains('open'));
-    });
-
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => toggleMenu(false));
-    });
-
-    // ─── MODALS ──────────────────────────────────────────────
+    // ─── MODALS (global scope for onclick attributes) ─────────
     const modalCloseFixed = document.getElementById('modalCloseFixed');
     let activeModalId = null;
 
@@ -1344,6 +1432,27 @@
       if (activeModalId) closeModalById(activeModalId);
     });
 
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // ─── HAMBURGER ───────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function toggleMenu(open) {
+      hamburger.classList.toggle('open', open);
+      mobileMenu.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      toggleMenu(!mobileMenu.classList.contains('open'));
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => toggleMenu(false));
+    });
+
     // ─── ESCAPE KEY ──────────────────────────────────────────
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape') return;
@@ -1366,6 +1475,16 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ─── HERO SKELETON ───────────────────────────────────────
+    const heroBgImg = document.getElementById('heroBgImg');
+    const heroVideo = document.getElementById('heroVideo');
+    function markHeroLoaded() { heroBgImg.classList.add('loaded'); }
+    // canplay fires as soon as there's enough data to start playback
+    heroVideo.addEventListener('canplay', markHeroLoaded, { once: true });
+    // Fallback: if video errors or is blocked, still reveal after 2s
+    heroVideo.addEventListener('error', markHeroLoaded, { once: true });
+    setTimeout(markHeroLoaded, 2000);
 
 
   
