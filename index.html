@@ -883,7 +883,7 @@
 
   <!-- ─── FOOTER ─────────────────────────────────────────────── -->
   <footer>
-    <span>© 2025 Gabriel Jacobi. All rights reserved.</span>
+    <span>© <span id="copyright-year"></span> Gabriel Jacobi. All rights reserved.</span>
     <span>Malmö, Sweden</span>
   </footer>
 
@@ -1433,6 +1433,9 @@
     });
 
   document.addEventListener("DOMContentLoaded", function() {
+
+    // ─── COPYRIGHT YEAR ──────────────────────────────────────
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
 
     // ─── HAMBURGER ───────────────────────────────────────────
     const hamburger = document.getElementById('hamburger');
